@@ -1,8 +1,10 @@
-const ACTIVE_RECT_COLOR = '#DFE5DA';
-const COLOR_LABEL_COLOR = '#818589';
-const GRID_LINES_COLOR = '#00000080';
+import {ColorValueHex, DrawParams} from "./types";
 
-export const drawGrid = (ctx, x, y, circleWidth, zoomRectSize) => {
+const ACTIVE_RECT_COLOR: ColorValueHex = '#DFE5DA';
+const COLOR_LABEL_COLOR: ColorValueHex = '#818589';
+const GRID_LINES_COLOR: ColorValueHex = '#00000080';
+
+export const drawGrid = ({ctx, x, y, circleWidth, zoomRectSize}: DrawParams): void => {
   const circleRadius = circleWidth / 2;
 
   ctx.save();
@@ -31,7 +33,7 @@ export const drawGrid = (ctx, x, y, circleWidth, zoomRectSize) => {
   ctx.restore();
 };
 
-export const drawRoundedRect = (ctx, x, y, width, height, radius) => {
+export const drawRoundedRect = ({ctx, x, y, width, height, radius}: DrawParams): void => {
   ctx.fillStyle = COLOR_LABEL_COLOR;
   ctx.beginPath();
   ctx.moveTo(x, y + radius);
@@ -42,7 +44,7 @@ export const drawRoundedRect = (ctx, x, y, width, height, radius) => {
   ctx.fill();
 };
 
-export const drawActiveRect = (ctx, x, y, circleWidth, zoomRectSize) => {
+export const drawActiveRect = ({ctx, x, y, circleWidth, zoomRectSize}: DrawParams): void => {
   const RectX = (x + circleWidth / 2) - zoomRectSize / 2;
   const RectY = (y + circleWidth / 2) - zoomRectSize / 2;
 
@@ -59,11 +61,18 @@ export const drawActiveRect = (ctx, x, y, circleWidth, zoomRectSize) => {
   ctx.stroke();
 };
 
-export const drawColorLabel = (ctx, x, y, color, circleWidth, font = "11px Arial") => {
+export const drawColorLabel = ({ctx, x, y, color, circleWidth, font = "11px Arial"}: DrawParams): void => {
   const labelX = x + circleWidth / 3;
   const labelY = y + circleWidth / 1.8;
 
-  drawRoundedRect(ctx, labelX, labelY, circleWidth / 3, 20, 5);
+  drawRoundedRect({
+    ctx,
+    x: labelX,
+    y: labelY,
+    width: circleWidth / 3,
+    height: 20,
+    radius: 5,
+  });
 
   ctx.font = font;
   ctx.fillStyle = ACTIVE_RECT_COLOR;

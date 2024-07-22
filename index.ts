@@ -1,28 +1,27 @@
-import { changeSVGColor, rgbToHex } from './src/helpers/color';
-import { drawActiveRect, drawColorLabel, drawGrid } from './src/helpers/drawers';
+import {changeSVGColor, rgbToHex} from './src/helpers/color';
+import {drawActiveRect, drawColorLabel, drawGrid} from './src/helpers/drawers';
 
-const GRID_RATIO = 20;
-const ZOOM_LEVEL = 3;
+const GRID_RATIO: number = 20;
+const ZOOM_LEVEL: number = 3;
 
-let isPickerMode = false;
+let isPickerMode: boolean = false;
 
-const hex = document.getElementById('hex');
-const img = document.getElementById('image');
-const circle = document.getElementById('circle');
-const canvas = document.getElementById('canvas');
-const colorPicker = document.getElementById('color-picker');
+const canvas: HTMLCanvasElement = document.getElementById('canvas') as HTMLCanvasElement;
+const ctx: CanvasRenderingContext2D = canvas.getContext('2d', {willReadFrequently: true})!;
+const img: HTMLImageElement = document.getElementById('image') as HTMLImageElement;
+const circle: SVGSVGElement = document.getElementById('circle') as unknown as SVGSVGElement;
+const hex: HTMLElement = document.getElementById('hex') as HTMLElement;
+const colorPicker: HTMLElement = document.getElementById('color-picker') as HTMLElement;
 
-const ctx = canvas.getContext("2d", { willReadFrequently: true });
+const circleWidth: number = circle.width.animVal.value;
 
-const circleWidth = circle.width.animVal.value;
+const zoomSize: number = circleWidth;
+const zoomRectSize: number = (circleWidth - GRID_RATIO) / GRID_RATIO;
+const vw: number = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
+const vh: number = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0);
 
-const zoomSize = circleWidth;
-const zoomRectSize = (circleWidth - GRID_RATIO) / GRID_RATIO;
-let vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
-let vh = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0);
-
-const imageWidthShrinkRatio = img.width / vw;
-const imageHeightShrinkRatio = img.height / vh;
+const imageWidthShrinkRatio: number = img.width / vw;
+const imageHeightShrinkRatio: number = img.height / vh;
 
 img.width = vw;
 img.height = vh;
@@ -31,8 +30,8 @@ canvas.width = vw;
 canvas.height = vh;
 
 
-const zoomOnMouseMove = e => {
-  const { offsetX, offsetY } = e;
+const zoomOnMouseMove = (e: MouseEvent) => {
+  const {offsetX, offsetY} = e;
 
   const circleX = offsetX - circleWidth / 2;
   const circleY = offsetY - circleWidth / 2;
@@ -75,15 +74,15 @@ const zoomOnMouseMove = e => {
 
   changeSVGColor(hexColor);
 
-  drawGrid(ctx, dx, dy, circleWidth, zoomRectSize);
-  drawActiveRect(ctx, dx, dy, circleWidth, zoomRectSize);
-  drawColorLabel(ctx, dx, dy, hexColor, circleWidth);
+  drawGrid({ctx, x: dx, y: dy, circleWidth, zoomRectSize});
+  drawActiveRect({ctx, x: dx, y: dy, circleWidth, zoomRectSize});
+  drawColorLabel({ctx, x: dx, y: dy, color: hexColor, circleWidth});
 };
 
-const getColorOnClick = e => {
-  const { offsetX, offsetY } = e;
+const getColorOnClick = (e: MouseEvent) => {
+  const {offsetX, offsetY} = e;
 
-  const imageData = ctx.getImageData(offsetX, offsetY, 1, 1).data;
+  const imageData: Uint8ClampedArray = ctx.getImageData(offsetX, offsetY, 1, 1).data;
   hex.innerHTML = `Picked color: ${rgbToHex(imageData[0], imageData[1], imageData[2])}`;
 };
 

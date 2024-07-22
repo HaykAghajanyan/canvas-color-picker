@@ -2,7 +2,7 @@
   "name": "canvas-project",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "index.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "vite",
@@ -12,6 +12,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "typescript": "^5.5.3",
     "vite": "^5.3.4"
   }
 }
